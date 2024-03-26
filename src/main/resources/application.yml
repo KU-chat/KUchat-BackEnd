@@ -1,0 +1,70 @@
+spring:
+  profiles:
+    group:
+      "local": "localDB, localPort, secret"
+      "dev": "devDB, devPort, secret"
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: "localDB"
+
+  datasource:
+    url: ${LOCAL_DATASOURCE_URL}
+    username: ${LOCAL_DATASOURCE_USERNAME}
+    password: ${LOCAL_DATASOURCE_PASSWORD}
+    driver-class-name: org.h2.Driver
+    dbcp2:
+      valication-query: select 1
+  sql:
+    init:
+      platform: h2
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: "devDB"
+
+  datasource:
+    url: ${DEV_DATASOURCE_URL}
+    username: ${DEV_DATASOURCE_USERNAME}
+    password: ${DEV_DATASOURCE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    dbcp2:
+      valication-query: select 1
+  sql:
+    init:
+      platform: mysql
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: "localPort"
+server:
+  port: 9000
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: "devPort"
+server:
+  port: 9001
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: "secret"
+
+secret:
+  jwt-secret-key: ${JWT_SECRET_KEY}
+  jwt-expired-in: ${JWT_EXPIRED_IN}

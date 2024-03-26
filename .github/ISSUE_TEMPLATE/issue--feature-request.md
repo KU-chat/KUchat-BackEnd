@@ -1,5 +1,5 @@
 ---
-name: 'Issue: Feature request'
+name: 'Feature request'
 about: 기능 추가 이슈 탬플릿
 title: "[Feature] 추가하려는 기능을 적어주세요"
 labels: ''
