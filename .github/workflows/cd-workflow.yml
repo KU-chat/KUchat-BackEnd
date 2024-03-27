@@ -54,9 +54,10 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_KEY }}
           port: ${{ secrets.EC2_PORT }}
+          envs: GITHUB_SHA
           scripts: |
             sudo docker rm -f $(docker ps -qa)
             sudo docker ps
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}
-            sudo docker run -d -p 8080:8080 --name kuchat-dev ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}
+            sudo docker run -d -p 9000:9000 --name kuchat ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}
             sudo docker image prune -f
