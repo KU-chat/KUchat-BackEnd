@@ -29,7 +29,7 @@ jobs:
           setting-path: ${{ github.workspace }}
 
       - name: 📜 make application-dev.yml
-        run:
+        run: |
           cd ./src/main/resources
           touch ./application-dev.yml
           echo "${{ secrets.DEV_YML }}"
