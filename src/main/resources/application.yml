@@ -24,4 +24,4 @@ secret:
   jwt-expired-in: 7200000
 
 server:
-  port: 9001
+  port: 9000
