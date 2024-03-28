@@ -16,8 +16,12 @@ spring:
       enabled: true
       settings:
         web-allow-others: true
-
+  mustache:
+    check-template-location: false
 
 secret:
   jwt-secret-key: vlkhpfeicviusdfslfhlwbfvcabmwefsdfeoivnsdmewv
   jwt-expired-in: 7200000
+
+server:
+  port: 9001
