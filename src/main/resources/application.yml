@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:~/kuchat
+    url: jdbc:h2:tcp://localhost/~/kuchat
     username: sa
     driver-class-name: org.h2.Driver
   jpa:
