@@ -55,7 +55,7 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           port: ${{ secrets.EC2_PORT }}
           envs: GITHUB_SHA
-          scripts: |
+          script: |
             sudo docker rm -f $(docker ps -qa)
             sudo docker ps
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}
