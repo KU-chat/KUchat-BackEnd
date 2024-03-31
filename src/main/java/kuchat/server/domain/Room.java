@@ -27,6 +27,6 @@ public class Room extends BaseTime {
     @OneToMany(mappedBy = "room")
     private List<RoomMember> roomMember = new ArrayList<>();
 
-    @OneToMany(mappedBy = "room")
-    private List<Message> messages = new ArrayList<>();
+//    @OneToMany(mappedBy = "room")
+//    private List<Message> messages = new ArrayList<>();
 }

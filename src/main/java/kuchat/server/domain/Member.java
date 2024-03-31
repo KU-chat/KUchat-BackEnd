@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import kuchat.server.domain.enums.Gender;
 import kuchat.server.domain.enums.LearnLanguage;
 import kuchat.server.domain.enums.SettingLanguage;
 import lombok.Getter;
@@ -12,7 +13,6 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Builder
 @Entity
 @Table(name = "member")
 @Getter
@@ -29,8 +29,6 @@ public class Member extends BaseTime {
     @Column(name = "email", nullable = false)
     private String email;
 
-//    private final String friendCode;      // 1. final로 하는 법   // 2. 멤버 각각의 고유 문자열 생성 방법 고민해보기
-
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -42,7 +40,7 @@ public class Member extends BaseTime {
     private String studentId;
 
     @Enumerated(EnumType.STRING)
-    private String gender;
+    private Gender gender;
 
     @Size(min = 6, max = 6)
     private String birthday;
