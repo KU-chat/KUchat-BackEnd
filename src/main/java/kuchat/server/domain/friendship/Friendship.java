@@ -1,6 +1,8 @@
-package kuchat.server.domain;
+package kuchat.server.domain.friendship;
 
 import jakarta.persistence.*;
+import kuchat.server.domain.BaseTime;
+import kuchat.server.domain.member.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
