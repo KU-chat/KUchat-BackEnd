@@ -1,6 +1,9 @@
-package kuchat.server.domain;
+package kuchat.server.domain.roomMember;
 
 import jakarta.persistence.*;
+import kuchat.server.domain.BaseTime;
+import kuchat.server.domain.member.Member;
+import kuchat.server.domain.room.Room;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
