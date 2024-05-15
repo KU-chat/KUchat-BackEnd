@@ -8,6 +8,7 @@ import kuchat.server.domain.BaseTime;
 import kuchat.server.domain.blockMember.BlockMember;
 import kuchat.server.domain.enums.*;
 import kuchat.server.domain.friendship.Friendship;
+import kuchat.server.domain.member.dto.SignupRequest;
 import kuchat.server.domain.roomMember.RoomMember;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +16,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static kuchat.server.domain.enums.SettingLanguage.of;
 
 @Entity
 @Table(name = "member")
@@ -89,12 +92,25 @@ public class Member extends BaseTime {
     @Column(nullable = false)
     private String attributeName;
 
-    @Builder
     public Member(String email, Platform platform, String attributeName) {
         this.email = email;
         this.platform = platform;
         this.attributeName = attributeName;
     }
 
+
+    @Builder
+    public Member(SignupRequest request){
+        this.setLanguage = SettingLanguage.of(request.getSetLanguage());
+        this.firstLanguage = LearnLanguage.of(request.getFirstLanguage());
+        this.secondLanguage = LearnLanguage.of(request.getSecondLanguage());
+        this.hometown = request.getHometown();
+        this.name = request.getName();
+        this.department = request.getDepartment();
+        this.studentId = request.getStudentId();
+        this.gender = Gender.of(request.getGender());
+        this.birthday = request.getBirthday();
+
+    }
 
 }

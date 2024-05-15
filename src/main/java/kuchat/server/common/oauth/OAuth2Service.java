@@ -1,10 +1,9 @@
 package kuchat.server.common.oauth;
 
-import jakarta.servlet.http.HttpSession;
 import kuchat.server.common.oauth.dto.OAuth2Attribute;
 import kuchat.server.domain.enums.Platform;
 import kuchat.server.domain.member.Member;
-import kuchat.server.domain.member.MemberRepository;
+import kuchat.server.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -26,7 +25,7 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
     // 구글이 발급한 엑세스 토큰을 가지고 구글에게 사용자 정보 요청하기
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        // 엑세스 토큰 가져오기
+
         OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
