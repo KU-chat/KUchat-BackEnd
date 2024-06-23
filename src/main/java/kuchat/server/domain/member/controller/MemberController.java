@@ -1,6 +1,5 @@
 package kuchat.server.domain.member.controller;
 
-import kuchat.server.domain.member.Member;
 import kuchat.server.domain.member.dto.SignupRequest;
 import kuchat.server.domain.member.dto.SignupResponse;
 import kuchat.server.domain.member.service.MemberService;
@@ -19,9 +18,10 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/member")
-    public Long signup(@RequestBody SignupRequest signupRequest){
+    public ResponseEntity<SignupResponse> signup(@RequestBody SignupRequest signupRequest) {
         log.info("[MemberController - signup request : {}]", signupRequest);
-
-        return memberService.signup(signupRequest);
+        SignupResponse response = memberService.signup(signupRequest);
+        return ResponseEntity.ok(response);
+//        return memberService.signup(signupRequest);
     }
 }

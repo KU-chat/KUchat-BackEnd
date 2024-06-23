@@ -44,10 +44,6 @@ public class OAuth2Attribute {
     }
 
     public Member toMember() {
-        return Member.builder()
-                .email(email)
-                .attributeName(userNameAttributeName)
-                .platform(platform)
-                .build();
+        return new Member(email, platform, userNameAttributeName);
     }
 }
