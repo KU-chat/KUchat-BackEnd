@@ -110,7 +110,6 @@ public class Member extends BaseTime {
         this.studentId = request.getStudentId();
         this.gender = Gender.of(request.getGender());
         this.birthday = request.getBirthday();
-
     }
 
 }

@@ -17,11 +17,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
     private final MemberService memberService;
 
+    // 회원가입
     @PostMapping("/member")
     public ResponseEntity<SignupResponse> signup(@RequestBody SignupRequest signupRequest) {
         log.info("[MemberController - signup request : {}]", signupRequest);
+        if(memberService.duplicateStudentId(signupRequest.getStudentId())){
+            System.out.println("[error] 이미 존재하는 학번입니다.");
+        }
+
         SignupResponse response = memberService.signup(signupRequest);
         return ResponseEntity.ok(response);
-//        return memberService.signup(signupRequest);
     }
+
 }
