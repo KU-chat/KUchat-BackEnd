@@ -1,6 +1,7 @@
 package kuchat.server.common.config;
 
 import kuchat.server.common.oauth.OAuth2Service;
+import kuchat.server.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +25,7 @@ public class SecurityConfig {
     private final OAuth2Service oAuth2Service;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, MemberService memberService) throws Exception {
         return http
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .csrf(csrf -> csrf.disable())
@@ -41,7 +42,7 @@ public class SecurityConfig {
                         .failureUrl("/login-error")             // 로그인 실패 시 리디렉션될 URL 설정
                         .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2Service))            // 사용자 정보를 로드하는 데 사용할 UserService 설정
                 )
-                .addFilterBefore(new JwtTokenFilter(oAuth2Service, secretKey), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtTokenFilter(memberService, secretKey), UsernamePasswordAuthenticationFilter.class)
                 .headers(headers -> headers.frameOptions(FrameOptionsConfig::disable))
                 .build();
     }
