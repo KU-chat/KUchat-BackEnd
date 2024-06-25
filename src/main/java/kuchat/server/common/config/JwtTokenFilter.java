@@ -24,31 +24,30 @@ import java.util.List;
 public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final MemberService memberService;
-    private final String secretkey;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if(authorizationHeader == null){
+        if (authorizationHeader == null) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        if(!authorizationHeader.startsWith("Bearer ")){
+        if (!authorizationHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         String token = authorizationHeader.split(" ")[1];
 
-        if(JwtTokenUtil.isExpired(token)){
+        if (JwtTokenUtil.isExpired(token)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String memberId = JwtTokenUtil.extractId(token);
-        Member loginMember = memberService.getMemberById(memberId);
+        String email = JwtTokenUtil.extractEmail(token);
+        Member loginMember = memberService.getMemberByEmail(email);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginMember.getId(), null, List.of(new SimpleGrantedAuthority(loginMember.getRole().name()))
         );

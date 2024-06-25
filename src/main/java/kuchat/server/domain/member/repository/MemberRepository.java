@@ -11,7 +11,9 @@ import java.util.Optional;
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    Optional<Member> findByPlatformAndEmail(Platform platform, String email);
+    Optional<Member> findByPlatformAndAttributeName(Platform platform, String nameAttributeKey);
 
     Optional<Member> findAllByStudentId(String studentId);
+
+    Optional<Member> findByEmail(String email);
 }

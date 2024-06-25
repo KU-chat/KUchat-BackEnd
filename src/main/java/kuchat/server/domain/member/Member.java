@@ -30,7 +30,7 @@ public class Member extends BaseTime {
     @Column(name = "member_id")
     private Long id;
 
-    @Email      // 구글 이메일
+    @Email
     @NotEmpty
     @Column(name = "email", nullable = false)
     private String email;
@@ -80,7 +80,7 @@ public class Member extends BaseTime {
     private List<Friendship> friendships = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
-    private Role role = Role.STUDENT;
+    private Role role;
 
 //    @OneToMany(mappedBy = "member")
 //    private List<Notification> notifications = new ArrayList<>();
@@ -90,14 +90,17 @@ public class Member extends BaseTime {
     private Platform platform;
 
     @Column(nullable = false)
-    private String attributeName;
+    private String attributeName;       // 플랫폼에서 제공하는 id
 
+    private String refreshToken;
+
+    @Builder
     public Member(String email, Platform platform, String attributeName) {
         this.email = email;
         this.platform = platform;
         this.attributeName = attributeName;
+        this.role = Role.GUEST;            // 추가정보 받기 전
     }
-
 
     @Builder
     public Member(SignupRequest request){
@@ -110,6 +113,10 @@ public class Member extends BaseTime {
         this.studentId = request.getStudentId();
         this.gender = Gender.of(request.getGender());
         this.birthday = request.getBirthday();
+        this.role = Role.STUDENT;           // 추가정보 받은 후
     }
 
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 }
