@@ -1,10 +1,9 @@
-package kuchat.server.common.config;
+package kuchat.server.domain.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import kuchat.server.domain.jwt.JwtTokenUtil;
 import kuchat.server.domain.member.Member;
 import kuchat.server.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +23,7 @@ import java.util.List;
 public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final MemberService memberService;
+    private final JwtTokenService jwtTokenService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -41,12 +41,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         String token = authorizationHeader.split(" ")[1];
 
-        if (JwtTokenUtil.isExpired(token)) {
+        if (jwtTokenService.isExpired(token)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String email = JwtTokenUtil.extractEmail(token);
+        String email = jwtTokenService.extractEmail(token);
         Member loginMember = memberService.getMemberByEmail(email);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginMember.getId(), null, List.of(new SimpleGrantedAuthority(loginMember.getRole().name()))

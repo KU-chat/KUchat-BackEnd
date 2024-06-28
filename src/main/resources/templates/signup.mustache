@@ -6,12 +6,12 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
-<!--{{>layout/header}}-->
+<!--layout/header-->
 <!--    <h3>회원 정보 입력하기</h3>-->
-    <h3>Enter Member Information</h3>
+    <h3> Enter Member Information </h3>
     <div class="col-md-12">
         <div class="col-md-4">
-            <form>
+            <form id="signupForm">
                 <div class="form-group">
 <!--                    <label for="setLanguage">설정 언어</label>-->
                     <label for="setLanguage">set language</label>
@@ -66,12 +66,18 @@
 <!--                    <input class="form-control" id="secondLanguage" placeholder="두번째로 학습하고 싶은 언어를 입력하세요.">-->
                     <input class="form-control" id="secondLanguage" placeholder="Enter the second language you want to learn.">
                 </div>
+                <div class="form-group">
+                    <label for="firstLanguage">email</label>
+                    <!--                    <input class="form-control" id="firstLanguage" placeholder="첫번째로 학습하고 싶은 언어를 입력하세요.">-->
+                    <input class="form-control" id="email" placeholder="Enter your email.">
+                </div>
+
                 <button type="submit" class="btn btn-sm btn-success active">sign up</button>
                 <a href="/" role="button" class="btn btn-secondary">cancel</a>
             </form>
         </div>
     </div>
-<!--{{>layout/footer}}-->
+<!--layout/footer-->
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
@@ -97,7 +103,8 @@
                 department: $('#department').val(),
                 studentId: $('#studentId').val(),
                 gender: $('#gender').val(),
-                birthday: $('#birthday').val()
+                birthday: $('#birthday').val(),
+                email: $('#email').val()
             };
 
             $.ajax({

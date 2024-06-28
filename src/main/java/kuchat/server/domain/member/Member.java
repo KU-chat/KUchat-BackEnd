@@ -13,16 +13,16 @@ import kuchat.server.domain.roomMember.RoomMember;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static kuchat.server.domain.enums.SettingLanguage.of;
 
 @Entity
 @Table(name = "member")
 @Getter
 @NoArgsConstructor
+@ToString
 public class Member extends BaseTime {
 
     @Id
@@ -99,11 +99,14 @@ public class Member extends BaseTime {
         this.email = email;
         this.platform = platform;
         this.attributeName = attributeName;
-        this.role = Role.GUEST;            // 추가정보 받기 전
+        role = Role.GUEST;
     }
 
-    @Builder
-    public Member(SignupRequest request){
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public void updateInfo(SignupRequest request) {
         this.setLanguage = SettingLanguage.of(request.getSetLanguage());
         this.firstLanguage = LearnLanguage.of(request.getFirstLanguage());
         this.secondLanguage = LearnLanguage.of(request.getSecondLanguage());
@@ -113,10 +116,8 @@ public class Member extends BaseTime {
         this.studentId = request.getStudentId();
         this.gender = Gender.of(request.getGender());
         this.birthday = request.getBirthday();
+        this.email = request.getEmail();
         this.role = Role.STUDENT;           // 추가정보 받은 후
     }
 
-    public void updateRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
-    }
 }

@@ -13,14 +13,10 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
-
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity          // spring security 기능을 활성화시키는 어노테이션
 @RequiredArgsConstructor
 public class SecurityConfig {
-
-    @Value("${secret.jwt.secret-key}")
-    private String secretKey;
 
     private final OAuth2Service oAuth2Service;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
@@ -29,27 +25,30 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http
-                .httpBasic(httpBasic -> httpBasic.disable())
-                .headers(headers -> headers.frameOptions(FrameOptionsConfig::disable))
-                .csrf(csrf -> csrf.disable())
+        http
+                .httpBasic(httpBasic -> httpBasic.disable())        // jwt 토큰을 사용한 bearer 방식을 사용하므로 default 설정 disable
+                .headers(headers -> headers.frameOptions(FrameOptionsConfig::disable))      // h2 콘솔에 접근하기 위해서는 X-Frame-Options Click jacking 공격을 막는 설정 disable
+                .csrf(csrf -> csrf.disable())           // rest api 방식에서는 jwt 또는 oauth2 방식을 사용하여 인증하므로 csrf 보안기능 필요 X
                 .sessionManagement(sessionManagement -> sessionManagement
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)     // 세션을 사용하지 않으므로 disable (stateless)
                 )
-                .authorizeHttpRequests(authorize -> authorize
+                .authorizeHttpRequests((authorize) -> authorize     // 인증, 인가 설정 시 HttpServletRequest 를 사용한다는 의미
                         .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**", "/swagger-ui/**").permitAll()
-                        .requestMatchers("/oauth/login", "member/signup").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/oauth/login", "member/signup").permitAll()       // 인증 절차 없이 접근 가능해야 하는 페이지 모두 추가하기
+                        .anyRequest().authenticated()           // 이 외에 모든 페이지는 인증된 사용자만 접근 가능
                 )
-                .oauth2Login(oauth2Login -> oauth2Login
-                        .loginPage("/member/signup")
-                        .defaultSuccessUrl("/")         // 로그인 성공 후 리디렉션될 기본 URL 설정
-                        .failureUrl("/oauth/login-error")         // 로그인 실패 시 리디렉션될 URL 설정
-                        .successHandler(oAuth2LoginSuccessHandler)
-                        .failureHandler(oAuth2LoginFailureHandler)
-                        .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2Service))            // 사용자 정보를 로드하는 데 사용할 UserService 설정
-                )
+//                .oauth2ResourceServer((oauth2) -> oauth2        // jwt 인증 사용 (우리 서버에서 발급한 jwt를 검증하여 우리 서버에 대한 접근 권한을 부여)
+//                        .jwt(Customizer.withDefaults()))
+                .oauth2Login(oauth2Login -> oauth2Login         // oauth2 로그인에 관한 다양한 기능 제공
+//                        .loginPage("/")
+//                        .defaultSuccessUrl("/")                   // 로그인 성공 후 리디렉션될 기본 URL 설정
+//                        .failureUrl("/oauth/login-error")         // 로그인 실패 시 리디렉션될 URL 설정
+                                .successHandler(oAuth2LoginSuccessHandler)
+                                .failureHandler(oAuth2LoginFailureHandler)
+                                .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2Service))            // oauth2 로그인 로직을 담당하는 service 등록
+                );
 //                .addFilterBefore(new JwtTokenFilter(memberService, secretKey), UsernamePasswordAuthenticationFilter.class)
-                .build();
+        return http.build();
     }
+
 }

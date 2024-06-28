@@ -17,13 +17,16 @@ public class MemberController {
 
     // 회원가입 처리하기
     @PostMapping("/signup")
-    public ResponseEntity<SignupResponse> signup(@RequestBody SignupRequest signupRequest) {
-        log.info("[MemberController - signup request : {}]", signupRequest);
+    public ResponseEntity<SignupResponse> signup(@RequestParam String platform,
+                                                 @RequestParam String attributeName,
+                                                 @RequestBody SignupRequest signupRequest) {
+        log.info("[signup] parameter : platform = {}, attributeName = {}", platform, attributeName);
+        log.info("[signup] request : {}", signupRequest.toString());
         if (memberService.duplicateStudentId(signupRequest.getStudentId())) {
             System.out.println("[error] 이미 존재하는 학번입니다.");
         }
 
-        SignupResponse response = memberService.signup(signupRequest);
+        SignupResponse response = memberService.signup(platform, attributeName, signupRequest);
         return ResponseEntity.ok(response);
     }
 

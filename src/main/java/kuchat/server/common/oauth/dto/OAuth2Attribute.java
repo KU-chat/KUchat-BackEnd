@@ -40,6 +40,8 @@ public class OAuth2Attribute {
     }
 
     private static OAuth2Attribute ofGoogle(String userNameAttributeName, Map<String, Object> attributes) {
+        System.out.println("[ofGoogle] userNameAttributeName = " + userNameAttributeName);
+
         return OAuth2Attribute.builder()
                 .nameAttributeKey(userNameAttributeName)
                 .oAuth2UserInfo(new GoogleOAuth2UserInfo(attributes))

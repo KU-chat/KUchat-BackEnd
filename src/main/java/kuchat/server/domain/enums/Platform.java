@@ -15,7 +15,6 @@ public enum Platform {
         this.value = value;
     }
 
-
     public static Platform getPlatform(String registrationId) {
         for(Platform platform : Platform.values()){
             if(platform.getValue().equals(registrationId)){
