@@ -4,7 +4,6 @@ import kuchat.server.common.oauth.handler.OAuth2LoginFailureHandler;
 import kuchat.server.common.oauth.handler.OAuth2LoginSuccessHandler;
 import kuchat.server.common.oauth.service.OAuth2Service;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,26 +25,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .httpBasic(httpBasic -> httpBasic.disable())        // jwt 토큰을 사용한 bearer 방식을 사용하므로 default 설정 disable
+                .httpBasic(httpBasic -> httpBasic.disable())                               // jwt 토큰을 사용한 bearer 방식을 사용하므로 default 설정 disable
                 .headers(headers -> headers.frameOptions(FrameOptionsConfig::disable))      // h2 콘솔에 접근하기 위해서는 X-Frame-Options Click jacking 공격을 막는 설정 disable
-                .csrf(csrf -> csrf.disable())           // rest api 방식에서는 jwt 또는 oauth2 방식을 사용하여 인증하므로 csrf 보안기능 필요 X
+                .csrf(csrf -> csrf.disable())                                              // rest api 방식에서는 jwt 또는 oauth2 방식을 사용하여 인증하므로 csrf 보안기능 필요 X
                 .sessionManagement(sessionManagement -> sessionManagement
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)     // 세션을 사용하지 않으므로 disable (stateless)
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)             // 세션을 사용하지 않으므로 disable (stateless)
                 )
-                .authorizeHttpRequests((authorize) -> authorize     // 인증, 인가 설정 시 HttpServletRequest 를 사용한다는 의미
+                .authorizeHttpRequests((authorize) -> authorize                             // 인증, 인가 설정 시 HttpServletRequest 를 사용한다는 의미
                         .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**", "/swagger-ui/**").permitAll()
                         .requestMatchers("/oauth/login", "member/signup").permitAll()       // 인증 절차 없이 접근 가능해야 하는 페이지 모두 추가하기
                         .anyRequest().authenticated()           // 이 외에 모든 페이지는 인증된 사용자만 접근 가능
                 )
-//                .oauth2ResourceServer((oauth2) -> oauth2        // jwt 인증 사용 (우리 서버에서 발급한 jwt를 검증하여 우리 서버에 대한 접근 권한을 부여)
-//                        .jwt(Customizer.withDefaults()))
-                .oauth2Login(oauth2Login -> oauth2Login         // oauth2 로그인에 관한 다양한 기능 제공
-//                        .loginPage("/")
-//                        .defaultSuccessUrl("/")                   // 로그인 성공 후 리디렉션될 기본 URL 설정
-//                        .failureUrl("/oauth/login-error")         // 로그인 실패 시 리디렉션될 URL 설정
-                                .successHandler(oAuth2LoginSuccessHandler)
-                                .failureHandler(oAuth2LoginFailureHandler)
-                                .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2Service))            // oauth2 로그인 로직을 담당하는 service 등록
+                .oauth2Login(oauth2Login -> oauth2Login                                      // oauth2 로그인에 관한 다양한 기능 제공
+                        .successHandler(oAuth2LoginSuccessHandler)
+                        .failureHandler(oAuth2LoginFailureHandler)
+                        .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2Service))            // oauth2 로그인 로직을 담당하는 service 등록
                 );
 //                .addFilterBefore(new JwtTokenFilter(memberService, secretKey), UsernamePasswordAuthenticationFilter.class)
         return http.build();

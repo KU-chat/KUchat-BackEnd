@@ -25,23 +25,16 @@ public class MemberService {
 
     @Transactional
     public SignupResponse signup(String value, String attributeName, SignupRequest signupRequest) {
-        System.out.println("=============11111==============");
 
         Platform platform = Platform.getPlatform(value);
         Member member = memberRepository.findByPlatformAndAttributeName(platform, attributeName)
                 .orElseThrow(() -> new NotFoundMemberException());
         System.out.println("============ member id : "+member.getId());
-
-
         member.updateInfo(signupRequest);
-        System.out.println("=============22222==============");
+
         // 엑세스 토큰, 리프레시 토큰 발급
         String accessToken = jwtTokenService.generateAccessToken(member.getEmail());
-        System.out.println("=============33333==============");
-
         String refreshToken = jwtTokenService.generateRefreshToken();
-        System.out.println("=============44444==============");
-
         member.updateRefreshToken(refreshToken);
 
         log.info("[signup] member id : " + member.getId());
