@@ -30,12 +30,7 @@ public class OAuth2Attribute {
         if (platform == Platform.GOOGLE) {
             return ofGoogle(userNameAttributeName, attributes);
         }
-//        if(platform == Platform.NAVER){
-//            return ofNaver(userNameAttributeName, attributes);
-//        }
-//        if(platform == Platform.KAKAO){
-//            return ofKakao(userNameAttributeName, attributes);
-//        }
+
         throw new NotFoundPlatformException();
     }
 

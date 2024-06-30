@@ -20,9 +20,7 @@ public class HomeController {
     @GetMapping("")
     public String home(HttpServletRequest request, Model model) {
         log.info("[home] 홈화면으로 이동~");
-
         String token = jwtTokenService.extractAccessToken(request).orElse(null);
-
         model.addAttribute("token", token);
 
         return "index";

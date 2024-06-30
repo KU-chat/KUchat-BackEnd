@@ -9,11 +9,8 @@ import kuchat.server.domain.member.dto.SignupResponse;
 import kuchat.server.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,10 +23,9 @@ public class MemberService {
     @Transactional
     public SignupResponse signup(String value, String attributeName, SignupRequest signupRequest) {
 
-        Platform platform = Platform.getPlatform(value);
+        Platform platform = Platform.of(value);
         Member member = memberRepository.findByPlatformAndAttributeName(platform, attributeName)
                 .orElseThrow(() -> new NotFoundMemberException());
-        System.out.println("============ member id : "+member.getId());
         member.updateInfo(signupRequest);
 
         // 엑세스 토큰, 리프레시 토큰 발급
@@ -43,19 +39,12 @@ public class MemberService {
         return new SignupResponse(member.getId(), accessToken, refreshToken);
     }
 
-    public Member getMemberById(String memberId) {
-        Long id = Long.parseLong(memberId);
-        return memberRepository.findById(id)
-                .orElseThrow(() -> new NotFoundMemberException());
-
-    }
-
     public boolean duplicateStudentId(String studentId) {
         return memberRepository.findAllByStudentId(studentId)
                 .isPresent();
     }
 
-    public Member getMemberByEmail(String email) {
+    public Member findMemberByEmail(String email) {
         return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundMemberException());
     }

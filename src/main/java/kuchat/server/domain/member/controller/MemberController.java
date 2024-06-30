@@ -1,5 +1,8 @@
 package kuchat.server.domain.member.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kuchat.server.domain.member.dto.SignupRequest;
 import kuchat.server.domain.member.dto.SignupResponse;
 import kuchat.server.domain.member.service.MemberService;
@@ -9,13 +12,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
+@Tag(name = "Member", description = "회원")
 @RequiredArgsConstructor
 @RequestMapping("/member")
 @RestController
 public class MemberController {
+
     private final MemberService memberService;
 
     // 회원가입 처리하기
+    @Operation(summary = "회원가입")
+    @SecurityRequirement(name = "JWT")
     @PostMapping("/signup")
     public ResponseEntity<SignupResponse> signup(@RequestParam String platform,
                                                  @RequestParam String attributeName,

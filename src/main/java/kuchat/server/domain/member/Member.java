@@ -1,9 +1,11 @@
 package kuchat.server.domain.member;
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import kuchat.server.common.exception.badrequest.EmailBadRequestException;
 import kuchat.server.domain.BaseTime;
 import kuchat.server.domain.blockMember.BlockMember;
 import kuchat.server.domain.enums.*;
@@ -32,6 +34,7 @@ public class Member extends BaseTime {
 
     @Email
     @NotEmpty
+    @Valid
     @Column(name = "email", nullable = false)
     private String email;
 
@@ -116,8 +119,18 @@ public class Member extends BaseTime {
         this.studentId = request.getStudentId();
         this.gender = Gender.of(request.getGender());
         this.birthday = request.getBirthday();
-        this.email = request.getEmail();
+        if(validateEmail(email)){
+            this.email = request.getEmail();
+        }
         this.role = Role.STUDENT;           // 추가정보 받은 후
+    }
+
+    private boolean validateEmail(String email) {
+        if(!email.contains("@konkuk.ac.kr")){
+            throw new EmailBadRequestException();
+        } else{
+            return true;
+        }
     }
 
 }

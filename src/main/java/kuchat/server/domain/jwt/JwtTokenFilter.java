@@ -47,7 +47,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         }
 
         String email = jwtTokenService.extractEmail(token);
-        Member loginMember = memberService.getMemberByEmail(email);
+        Member loginMember = memberService.findMemberByEmail(email);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginMember.getId(), null, List.of(new SimpleGrantedAuthority(loginMember.getRole().name()))
         );

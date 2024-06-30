@@ -35,18 +35,17 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
         OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        Platform platform = Platform.getPlatform(registrationId);
-        String userNameAttributeName = userRequest.getClientRegistration()
+        Platform platform = Platform.of(registrationId);
+        String attributeName = userRequest.getClientRegistration()
                 .getProviderDetails()
                 .getUserInfoEndpoint()
                 .getUserNameAttributeName();
         Map<String, Object> attributes = oAuth2User.getAttributes();
-        OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of(platform, userNameAttributeName, oAuth2User.getAttributes());
+        OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of(platform, attributeName, oAuth2User.getAttributes());
 
         Member member = saveOrUpdate(oAuth2Attribute);
         log.info("[loadUser] member : "+member.toString());
         memberRepository.save(member);
-
 
         return new CustomOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(member.getRole().getKey())),
@@ -60,8 +59,8 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
 
     private Member saveOrUpdate(OAuth2Attribute oAuth2Attribute) {
         Platform platform = oAuth2Attribute.getPlatform();
-        String nameAttributeKey = oAuth2Attribute.getNameAttributeKey();
-        return memberRepository.findByPlatformAndAttributeName(platform, nameAttributeKey)
+        String attributeName = oAuth2Attribute.getNameAttributeKey();
+        return memberRepository.findByPlatformAndAttributeName(platform, attributeName)
                 .orElse(oAuth2Attribute.toMember(platform, oAuth2Attribute.getOAuth2UserInfo()));
     }
 }

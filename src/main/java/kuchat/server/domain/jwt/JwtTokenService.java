@@ -46,8 +46,7 @@ public class JwtTokenService {
     // GoogleOAuth2UserInfo의 email을 사용하여 token 발급
     public String generateAccessToken(String email) {
 
-        final Claims claims = Jwts.claims();        // claims = jwt token에 들어갈 정보, claim에 id를 넣어줘야 회원 식별 가능
-
+        final Claims claims = Jwts.claims();        // claims = jwt token에 들어갈 정보, claim에 email을 넣어줘야 회원 식별 가능
         claims.put("email", email);
 
         log.info("[generateAccessToken] secretKey: " + secretKey);
@@ -84,11 +83,11 @@ public class JwtTokenService {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setHeader(accessHeader, accessToken);
         response.setHeader(refreshHeader, refreshToken);
-        log.info("재발급된 access token : {} , refresh token : {}", accessToken, refreshToken);
-        log.info("access token, refresh token 헤더에 추가 완료");
+        log.info("[sendAccessAndRefreshToken] 재발급된 access token : {} , refresh token : {}", accessToken, refreshToken);
+        log.info("[sendAccessAndRefreshToken] access token, refresh token 헤더에 추가 완료");
     }
 
-    public Optional<String> extractAccessToken(HttpServletRequest request) {            // Q. 이거말고 더 적합한 req, resp 클래스는 없을까???????
+    public Optional<String> extractAccessToken(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader(accessHeader))
                 .filter(str -> str.startsWith("Bearer "))
                 .map(accessToken -> accessToken.replace("Bearer ", ""));
